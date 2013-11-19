@@ -1,0 +1,10 @@
+<launch>
+  <!-- local machine already has a definition by default.
+       This tag overrides the default definition with
+       specific ROS_ROOT and ROS_PACKAGE_PATH values -->
+  <machine name="local_alt" address="localhost" default="true"/>
+
+  <!-- odometry broadcast node -->
+  <node name="apriltags_node" pkg="apriltags" type="apriltags_node" launch-prefix="xterm -e gdb --args">
+  </node>
+</launch>
