@@ -215,31 +215,37 @@ void AprilTagReader::read() {
 
   int frame = 0;
   // capture frame
-  m_cap >> m_image;
-
+  
+  /*
   // alternative way is to grab, then retrieve; allows for
   // multiple grab when processing below frame rate - v4l keeps a
   // number of frames buffered, which can lead to significant lag
   //      m_cap.grab();
   //      m_cap.retrieve(m_image);
-
+  */
   // detect April tags (requires a gray scale m_image)
-  cv::cvtColor(m_image, m_image_gray, CV_BGR2GRAY);
-  m_lastReadTags = m_tagDetector->extractTags(m_image_gray);
+  if (hasNewImage)
+  {
+    cv::cvtColor(m_image, m_image_gray, CV_BGR2GRAY);
 
-  // print out each detection
-  cout << m_lastReadTags.size() << " tags detected:" << endl;
-  for (int i=0; i<m_lastReadTags.size(); i++) {
-    print_detection(m_lastReadTags[i]);
-  }
+    m_lastReadTags = m_tagDetector->extractTags(m_image_gray);
+    hasNewImage = false;
 
-  // show the current m_image including any m_lastReadTags
-  if (m_draw) {
+    // print out each detection
+    cout << m_lastReadTags.size() << " tags detected:" << endl;
     for (int i=0; i<m_lastReadTags.size(); i++) {
-      // also highlight in the m_image
-      m_lastReadTags[i].draw(m_image);
+      print_detection(m_lastReadTags[i]);
     }
-    imshow(window_name, m_image); // OpenCV call
+
+    // show the current m_image including any m_lastReadTags
+    if (m_draw) {
+      for (int i=0; i<m_lastReadTags.size(); i++) {
+        // also highlight in the m_image
+        m_lastReadTags[i].draw(m_image);
+      }
+      ROS_INFO("Displaying image");
+      imshow(window_name, m_image); // OpenCV call
+    }
   }
 }
 
@@ -282,4 +288,22 @@ void AprilTagReader::getTransformInfo(AprilTags::TagDetection& detection,
   x = translation(0);
   y = translation(1);
   z = translation(2);
+}
+
+void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
+{
+  ROS_INFO("Got new mono image");
+  cv_bridge::CvImagePtr cv_ptr;
+  try
+  {
+    //cv_ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::mono8);
+    cv_ptr = cv_bridge::toCvCopy(img, std::string());
+    m_image = cv_ptr->image;
+  }
+  catch (cv_bridge::Exception& e)
+  {
+    ROS_ERROR("cv_bridge exception: %s", e.what());
+    return;
+  }
+  hasNewImage = true;
 }

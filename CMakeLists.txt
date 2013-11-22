@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   tf
+  cv_bridge
+  image_transport
 )
 
 ## System dependencies are found with CMake's conventions

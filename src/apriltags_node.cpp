@@ -26,7 +26,8 @@ int main(int argc, char** argv){
   current_time = ros::Time::now();
   last_time = ros::Time::now();
 
-  ros::Rate r(5.0);
+  ros::Rate r(1.0);
+
   while(n.ok()){
     ros::spinOnce();               // check for incoming messages
 
@@ -35,7 +36,7 @@ int main(int argc, char** argv){
 
     current_time = ros::Time::now();
 
-    ROS_INFO("Running... %d, %lf",reader.getTags().size(), current_time.toSec());
+    ROS_INFO("Running... #tags: %ld, time: %lf",reader.getTags().size(), current_time.toSec());
 
     for (int i=0; i<reader.getTags().size(); i++)
     {
@@ -44,7 +45,14 @@ int main(int argc, char** argv){
       double x,y,z,roll,pitch,yaw;
       reader.getTransformInfo(td, x,y,z,roll,pitch,yaw);
 
-      geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
+      //Pitch = z axis
+      //Yaw = x axis
+      //Roll = y axis
+
+      pitch += PI;
+      pitch = -pitch;
+
+      geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(yaw, roll, pitch);
 
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped odom_trans;
@@ -63,6 +71,6 @@ int main(int argc, char** argv){
 
     cvWaitKey(10);
     last_time = current_time;
-    //r.sleep();
+    r.sleep();
   }
 }
