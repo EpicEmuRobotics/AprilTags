@@ -5,19 +5,20 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include "std_msgs/Float32.h"
-
 #include "AprilTagReader.h"
+
+#define NUM_APRIL_TAGS 10
 
 ros::Time last_lw_time, last_rw_time;
 
 bool hasNewSpeeds = true;
 
 int main(int argc, char** argv){
-  ros::init(argc, argv, "AprilTagsPublisher");
+  ros::init(argc, argv, "AprilTagsNode");
 
   ros::NodeHandle n;
 
-  tf::TransformBroadcaster tags_broadcaster;
+  std::vector<tf::TransformBroadcaster> tags_broadcaster(10);
 
   AprilTagReader reader;
   reader.setup();
@@ -41,6 +42,7 @@ int main(int argc, char** argv){
     for (int i=0; i<reader.getTags().size(); i++)
     {
       AprilTags::TagDetection td = reader.getTags()[i];
+      int id = reader.getTags()[i].id;
 
       double x,y,z,roll,pitch,yaw;
       reader.getTransformInfo(td, x,y,z,roll,pitch,yaw);
@@ -58,7 +60,11 @@ int main(int argc, char** argv){
       geometry_msgs::TransformStamped odom_trans;
       odom_trans.header.stamp = current_time;
       odom_trans.header.frame_id = "camera_link";
-      odom_trans.child_frame_id = "april_tag";
+
+      stringstream ss;
+      ss << "april_tag["<<id<<"]";
+      
+      odom_trans.child_frame_id = ss.str().c_str();
 
       odom_trans.transform.translation.x = x;
       odom_trans.transform.translation.y = y;
@@ -66,7 +72,7 @@ int main(int argc, char** argv){
       odom_trans.transform.rotation = odom_quat;
 
       //send the transform
-      tags_broadcaster.sendTransform(odom_trans);
+      tags_broadcaster[id].sendTransform(odom_trans);
     }
 
     cvWaitKey(10);
