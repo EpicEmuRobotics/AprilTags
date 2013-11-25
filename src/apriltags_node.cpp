@@ -31,6 +31,8 @@ int main(int argc, char** argv){
 
   tf::TransformBroadcaster tags_broadcaster;
 
+  ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("/apriltags", 1000);
+  
   AprilTagReader reader;
   reader.setup();
 
@@ -40,7 +42,7 @@ int main(int argc, char** argv){
 
   ros::Rate r(1.0);
 
-  tf::TransformListener listener(n);
+  tf::TransformListener listener;
 
   while(n.ok()){
     ros::spinOnce();               // check for incoming messages
@@ -90,6 +92,25 @@ int main(int argc, char** argv){
       ///trash can has been found
       if (id % 2 == 0)
       {
+        tf::StampedTransform transform;
+        
+        geometry_msgs::PoseStamped ps;
+        tf::Quaternion quat;
+        //cvWaitKey(10);
+
+        listener.lookupTransform("/map", "/april_tag[6]",
+                                 ros::Time(0), transform);
+        quat = transform.getRotation();
+      
+        ps.header.frame_id = "6";
+        ps.pose.position.x = transform.getOrigin().x();
+        ps.pose.position.y = transform.getOrigin().y();
+        geometry_msgs::Quaternion q;
+        q.x=0;
+        q.y=0;
+        q.z=quat.z();
+        ps.pose.orientation = q;
+        tags_pub.publish(ps);
       }
     }
 
