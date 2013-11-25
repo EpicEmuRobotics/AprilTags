@@ -4,6 +4,8 @@
 
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
+#include <nav_msgs/Odometry.h>
 #include "std_msgs/Float32.h"
 #include "AprilTagReader.h"
 
@@ -26,7 +28,6 @@ int main(int argc, char** argv){
   }
   */
  
-  ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("/apriltags", 1000);
 
   tf::TransformBroadcaster tags_broadcaster;
 
@@ -38,6 +39,8 @@ int main(int argc, char** argv){
   last_time = ros::Time::now();
 
   ros::Rate r(1.0);
+
+  tf::TransformListener listener(n);
 
   while(n.ok()){
     ros::spinOnce();               // check for incoming messages
@@ -72,7 +75,7 @@ int main(int argc, char** argv){
       tag_transform.header.frame_id = "camera_link";
 
       stringstream ss;
-      ss << "april_tag["<<id<<"]";
+      ss << "/april_tag["<<id<<"]";
       
       tag_transform.child_frame_id = ss.str().c_str();
 
@@ -87,12 +90,6 @@ int main(int argc, char** argv){
       ///trash can has been found
       if (id % 2 == 0)
       {
-        geometry_msgs::PoseStamped ps;
-        ps.header.frame_id = "2";
-        ps.pose.position.x = x;
-        ps.pose.position.y = y;
-        ps.pose.orientation = odom_quat;
-        tags_pub.publish(ps);
       }
     }
 
