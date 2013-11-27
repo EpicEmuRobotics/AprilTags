@@ -6,7 +6,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "Homography33.h"
+#include "AprilTags/Homography33.h"
 
 Homography33::Homography33(const std::pair<float,float> &opticalCenter) : cxy(opticalCenter), fA(), H(), valid(false) {
   fA.setZero();

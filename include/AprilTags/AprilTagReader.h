@@ -17,6 +17,11 @@
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 
+
+#ifndef APRIL_TAG_READER_H
+#define APRIL_TAG_READER_H
+
+
 #ifndef PI
 const double PI = 3.14159265358979323846;
 #endif
@@ -24,7 +29,7 @@ const double TWOPI = 2.0*PI;
 
 
 class AprilTagReader {
-
+private:
   AprilTags::TagDetector* m_tagDetector;
   AprilTags::TagCodes m_tagCodes;
 
@@ -33,12 +38,13 @@ class AprilTagReader {
 
   int m_width; // image size in pixels
   int m_height;
+public:
   double m_tagSize; // April tag side length in meters of square black frame
   double m_fx; // camera focal length in pixels
   double m_fy;
   double m_px; // camera principal point
   double m_py;
-
+private:
   int m_deviceId; // camera id (in case of multiple cameras)
   cv::VideoCapture m_cap;
 
@@ -55,12 +61,11 @@ class AprilTagReader {
 
   void wRo_to_euler(const Eigen::Matrix3d& wRo, double& yaw, double& pitch, double& roll);
 
-
   ///ROS STUFF
   
   ros::NodeHandle nh;
   image_transport::ImageTransport m_it;
-  image_transport::Subscriber m_mono_image_sub;
+  image_transport::Subscriber ros_image_sub;
 
 public:
 
@@ -90,9 +95,16 @@ public:
     hasNewImage(false),
     m_it(nh)
   {
+
     window_name = std::string("april_tags_output");
 
-    m_mono_image_sub= m_it.subscribe("/camera/rgb/image_color", 1, &AprilTagReader::imageCallback, this);
+    // prepare window for drawing the camera images
+    if (m_draw) {
+      cv::namedWindow(window_name, 1);
+    }
+
+    // ROS topic to listen to that sends the images (currently supports rgb)
+    ros_image_sub= m_it.subscribe("/camera/rgb/image_color", 1, &AprilTagReader::imageCallback, this);
   }
 
   void imageCallback(const sensor_msgs::ImageConstPtr& img);
@@ -114,11 +126,15 @@ public:
   std::vector<AprilTags::TagDetection> getTags() { return m_lastReadTags; };
 
   std::vector<AprilTags::TagDetection> m_lastReadTags;
+
+  ros::Time m_lastImageTime;
+  ros::Time GetLastImageTime(){return m_lastImageTime; };
+
   /**
    * Normalize angle to be within the interval [-pi,pi].
    */
   inline double standardRad(double t);
 
-  void getTransformInfo(AprilTags::TagDetection& detection, double& x, double& y, double& z,
-                       double& roll, double& pitch, double& yaw);
 }; // AprilTagReader
+
+#endif
