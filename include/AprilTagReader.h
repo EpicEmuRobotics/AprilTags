@@ -7,9 +7,6 @@
 #include "Tag36h9.h"
 #include "Tag36h11.h"
 
-// Needed for getopt / command line options processing
-#include <unistd.h>
-
 //ROS specific stuff
 #include <ros/ros.h>
 #include <sensor_msgs/Image.h>
@@ -40,7 +37,6 @@ class AprilTagReader {
   double m_py;
 
   int m_deviceId; // camera id (in case of multiple cameras)
-  cv::VideoCapture m_cap;
 
   int m_exposure;
   int m_gain;
@@ -60,48 +56,19 @@ class AprilTagReader {
   
   ros::NodeHandle nh;
   image_transport::ImageTransport m_it;
-  image_transport::Subscriber m_mono_image_sub;
+  image_transport::Subscriber m_image_sub;
+
+  std::string m_image_topic;
 
 public:
-
-  // default constructor
-  AprilTagReader() :
-    // default settings, most can be modified through command line options (see below)
-    m_tagDetector(NULL),
-    m_tagCodes(AprilTags::tagCodes36h11),
-
-    m_draw(true),
-    m_arduino(false),
-
-    m_width(640),
-    m_height(480),
-    m_tagSize(0.166),
-    m_fx(600),
-    m_fy(600),
-    m_px(m_width/2),
-    m_py(m_height/2),
-
-    m_exposure(-1),
-    m_gain(-1),
-    m_brightness(-1),
-
-    m_deviceId(0),
-
-    hasNewImage(false),
-    m_it(nh)
-  {
-    window_name = std::string("april_tags_output");
-
-    m_mono_image_sub= m_it.subscribe("/camera/rgb/image_color", 1, &AprilTagReader::imageCallback, this);
-  }
+  AprilTagReader();
 
   void imageCallback(const sensor_msgs::ImageConstPtr& img);
 
   // changing the tag family
   void setTagCodes(string s);
 
-  // parse command line options to change default behavior
-  void parseOptions(int argc, char* argv[]);
+  void processParams(ros::NodeHandle);
 
   void setup();
 

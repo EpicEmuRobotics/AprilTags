@@ -34,7 +34,6 @@ int main(int argc, char** argv){
   ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("/apriltags", 1000);
   
   AprilTagReader reader;
-  reader.setup();
 
   ros::Time current_time, last_time;
   current_time = ros::Time::now();
@@ -74,7 +73,7 @@ int main(int argc, char** argv){
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped tag_transform;
       tag_transform.header.stamp = current_time;
-      tag_transform.header.frame_id = "camera_link";
+      tag_transform.header.frame_id = "camera_depth_frame";
 
       stringstream ss;
       ss << "/april_tag["<<id<<"]";
@@ -88,30 +87,6 @@ int main(int argc, char** argv){
 
       //send the transform
       tags_broadcaster.sendTransform(tag_transform);
-
-      ///trash can has been found
-      if (id % 2 == 0)
-      {
-        tf::StampedTransform transform;
-        
-        geometry_msgs::PoseStamped ps;
-        tf::Quaternion quat;
-        //cvWaitKey(10);
-
-        listener.lookupTransform("/map", "/april_tag[6]",
-                                 ros::Time(0), transform);
-        quat = transform.getRotation();
-      
-        ps.header.frame_id = "6";
-        ps.pose.position.x = transform.getOrigin().x();
-        ps.pose.position.y = transform.getOrigin().y();
-        geometry_msgs::Quaternion q;
-        q.x=0;
-        q.y=0;
-        q.z=quat.z();
-        ps.pose.orientation = q;
-        tags_pub.publish(ps);
-      }
     }
 
     cvWaitKey(10);

@@ -1,168 +1,113 @@
 #include "AprilTagReader.h"
 
-const string usage = "\n"
-  "Usage:\n"
-  "  apriltags_demo [OPTION...] [deviceID]\n"
-  "\n"
-  "Options:\n"
-  "  -h  -?          Show help options\n"
-  "  -a              Arduino (send tag ids over serial port)\n"
-  "  -d              disable graphics\n"
-  "  -C <bbxhh>      Tag family (default 36h11)\n"
-  "  -F <fx>         Focal length in pixels\n"
-  "  -W <width>      Image width (default 640, availability depends on camera)\n"
-  "  -H <height>     Image height (default 480, availability depends on camera)\n"
-  "  -S <size>       Tag size (square black frame) in meters\n"
-  "  -E <exposure>   Manually set camera exposure (default auto; range 0-10000)\n"
-  "  -G <gain>       Manually set camera gain (default auto; range 0-255)\n"
-  "  -B <brightness> Manually set the camera brightness (default 128; range 0-255)\n"
-  "\n";
-
-const string intro = "\n"
+const std::string intro = "\n"
     "April tags test code\n"
     "(C) 2012-2013 Massachusetts Institute of Technology\n"
     "Michael Kaess\n"
     "\n";
 
-// changing the tag family
-void AprilTagReader::setTagCodes(string s) {
-  if (s=="16h5") {
-    m_tagCodes = AprilTags::tagCodes16h5;
-  } else if (s=="25h7") {
-    m_tagCodes = AprilTags::tagCodes25h7;
-  } else if (s=="25h9") {
-    m_tagCodes = AprilTags::tagCodes25h9;
-  } else if (s=="36h9") {
-    m_tagCodes = AprilTags::tagCodes36h9;
-  } else if (s=="36h11") {
-    m_tagCodes = AprilTags::tagCodes36h11;
-  } else {
-    cout << "Invalid tag family specified" << endl;
-    exit(1);
-  }
+
+// default constructor
+AprilTagReader::AprilTagReader() :
+  // default settings, most can be modified through command line options (see below)
+  m_tagDetector(NULL),
+  m_tagCodes(AprilTags::tagCodes36h11),
+
+  m_draw(true),
+  m_arduino(false),
+
+  m_width(640),
+  m_height(480),
+  m_tagSize(0.166),
+  m_fx(600),
+  m_fy(600),
+  m_px(m_width/2),
+  m_py(m_height/2),
+
+  m_exposure(-1),
+  m_gain(-1),
+  m_brightness(-1),
+
+  m_deviceId(0),
+
+  hasNewImage(false),
+  m_it(nh),
+
+  m_image_topic("/camera/rgb/image_color")
+{
+  processParams(nh);
+
+  window_name = std::string("april_tags_output");
+
+  m_image_sub= m_it.subscribe(m_image_topic.c_str(), 1, &AprilTagReader::imageCallback, this);
 }
 
 // parse command line options to change default behavior
-void AprilTagReader::parseOptions(int argc, char* argv[]) {
-  int c;
-  while ((c = getopt(argc, argv, ":h?adC:F:H:S:W:E:G:B:")) != -1) {
-    // Each option character has to be in the string in getopt();
-    // the first colon changes the error character from '?' to ':';
-    // a colon after an option means that there is an extra
-    // parameter to this option; 'W' is a reserved character
-    switch (c) {
-    case 'h':
-    case '?':
-      cout << intro;
-      cout << usage;
-      exit(0);
-      break;
-    case 'a':
-      m_arduino = true;
-      break;
-    case 'd':
-      m_draw = false;
-      break;
-    case 'C':
-      setTagCodes(optarg);
-      break;
-    case 'F':
-      m_fx = atof(optarg);
-      m_fy = m_fx;
-      break;
-    case 'H':
-      m_height = atoi(optarg);
-      m_py = m_height/2;
-       break;
-    case 'S':
-      m_tagSize = atof(optarg);
-      break;
-    case 'W':
-      m_width = atoi(optarg);
-      m_px = m_width/2;
-      break;
-    case 'E':
-#ifndef EXPOSURE_CONTROL
-      cout << "Error: Exposure option (-E) not available" << endl;
+void AprilTagReader::processParams(ros::NodeHandle) {
+  ROS_INFO("Ported to ROS from:\n%s", intro.c_str());
+
+  std::string tagFamily = "36h11";
+  if (nh.getParam("tagFamily", tagFamily))
+  {
+    if (tagFamily=="16h5") {
+      m_tagCodes = AprilTags::tagCodes16h5;
+    } else if (tagFamily=="25h7") {
+      m_tagCodes = AprilTags::tagCodes25h7;
+    } else if (tagFamily=="25h9") {
+      m_tagCodes = AprilTags::tagCodes25h9;
+    } else if (tagFamily=="36h9") {
+      m_tagCodes = AprilTags::tagCodes36h9;
+    } else if (tagFamily=="36h11") {
+      m_tagCodes = AprilTags::tagCodes36h11;
+    } else {
+      ROS_ERROR("Invalid tag family specified");
       exit(1);
-#endif
-      m_exposure = atoi(optarg);
-      break;
-    case 'G':
-#ifndef EXPOSURE_CONTROL
-      cout << "Error: Gain option (-G) not available" << endl;
-      exit(1);
-#endif
-      m_gain = atoi(optarg);
-      break;
-    case 'B':
-#ifndef EXPOSURE_CONTROL
-      cout << "Error: Brightness option (-B) not available" << endl;
-      exit(1);
-#endif
-      m_brightness = atoi(optarg);
-      break;
-    case ':': // unknown option, from getopt
-      cout << intro;
-      cout << usage;
-      exit(1);
-      break;
     }
+    ROS_INFO("Set tag family to: %s", tagFamily.c_str());
   }
 
-  if (argc == optind + 1) {
-    m_deviceId = atoi(argv[optind]);
+  if (nh.getParam("imageTopic", m_image_topic))
+  {
+    ROS_INFO("Listening to color images coming on the topic: %s", m_image_topic.c_str());
+  }
+
+  if (nh.getParam("draw", m_draw))
+  {
+    if (m_draw)
+      ROS_INFO("Drawing has been enabled. Detected tags will be shown in a separate window");
+    else
+      ROS_INFO("Not showing the april detections tag onscreen");
+  }
+  else
+  {
+      ROS_INFO("Not showing the april detections tags onscreen");
+  }
+
+  if (nh.getParam("height", m_height))
+  {
+    ROS_INFO("Height of image set to: %d", m_height);
+  }
+
+  if (nh.getParam("width", m_width))
+  {
+    m_px = m_width/2;
+    ROS_INFO("Width of image set to: %d", m_width);
+  }
+
+  if (nh.getParam("focalLength", m_fx))
+  {
+    m_fy = m_fx;
+    ROS_INFO("Focal length set to: %lf", m_fx);
+  }
+
+  if (nh.getParam("tagSize", m_tagSize))
+  {
+    ROS_INFO("Tag size (square black frame) in meters, set to: %lf", m_tagSize);
   }
 }
 
 void AprilTagReader::setup() {
   m_tagDetector = new AprilTags::TagDetector(m_tagCodes);
-
-#ifdef EXPOSURE_CONTROL
-  // manually setting camera exposure settings; OpenCV/v4l1 doesn't
-  // support exposure control; so here we manually use v4l2 before
-  // opening the device via OpenCV; confirmed to work with Logitech
-  // C270; try exposure=20, gain=100, brightness=150
-
-  string video_str = "/dev/video0";
-  video_str[10] = '0' + m_deviceId;
-  int device = v4l2_open(video_str.c_str(), O_RDWR | O_NONBLOCK);
-
-  if (m_exposure >= 0) {
-    // not sure why, but v4l2_set_control() does not work for
-    // V4L2_CID_EXPOSURE_AUTO...
-    struct v4l2_control c;
-    c.id = V4L2_CID_EXPOSURE_AUTO;
-    c.value = 1; // 1=manual, 3=auto; V4L2_EXPOSURE_AUTO fails...
-    if (v4l2_ioctl(device, VIDIOC_S_CTRL, &c) != 0) {
-      cout << "Failed to set... " << strerror(errno) << endl;
-    }
-    cout << "exposure: " << m_exposure << endl;
-    v4l2_set_control(device, V4L2_CID_EXPOSURE_ABSOLUTE, m_exposure*6);
-  }
-  if (m_gain >= 0) {
-    cout << "gain: " << m_gain << endl;
-    v4l2_set_control(device, V4L2_CID_GAIN, m_gain*256);
-  }
-  if (m_brightness >= 0) {
-    cout << "brightness: " << m_brightness << endl;
-    v4l2_set_control(device, V4L2_CID_BRIGHTNESS, m_brightness*256);
-  }
-  v4l2_close(device);
-#endif 
-
-  // find and open a USB camera (built in laptop camera, web cam etc)
-  m_cap = cv::VideoCapture(m_deviceId);
-      if(!m_cap.isOpened()) {
-    cerr << "ERROR: Can't find video device " << m_deviceId << "\n";
-    exit(1);
-  }
-  m_cap.set(CV_CAP_PROP_FRAME_WIDTH, m_width);
-  m_cap.set(CV_CAP_PROP_FRAME_HEIGHT, m_height);
-  cout << "Camera successfully opened (ignore error messages above...)" << endl;
-  cout << "Actual resolution: "
-       << m_cap.get(CV_CAP_PROP_FRAME_WIDTH) << "x"
-       << m_cap.get(CV_CAP_PROP_FRAME_HEIGHT) << endl;
 
   // prepare window for drawing the camera images
   if (m_draw) {
@@ -212,17 +157,6 @@ void AprilTagReader::print_detection(AprilTags::TagDetection& detection) {
 // The processing function where m_images are retrieved, tags detected,
 // and information about detections generated
 void AprilTagReader::read() {
-
-  int frame = 0;
-  // capture frame
-  
-  /*
-  // alternative way is to grab, then retrieve; allows for
-  // multiple grab when processing below frame rate - v4l keeps a
-  // number of frames buffered, which can lead to significant lag
-  //      m_cap.grab();
-  //      m_cap.retrieve(m_image);
-  */
   // detect April tags (requires a gray scale m_image)
   if (hasNewImage)
   {
@@ -292,11 +226,12 @@ void AprilTagReader::getTransformInfo(AprilTags::TagDetection& detection,
 
 void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
 {
-  ROS_INFO("Got new mono image");
+  ROS_INFO("Got new image");
+
+  // cv_bridge is a way to convert ros images to opencv format images
   cv_bridge::CvImagePtr cv_ptr;
   try
   {
-    //cv_ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::mono8);
     cv_ptr = cv_bridge::toCvCopy(img, std::string());
     m_image = cv_ptr->image;
   }

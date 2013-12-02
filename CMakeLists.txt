@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(apriltags)
+project(april_tags)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -47,7 +47,7 @@ find_package( OpenCV REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES apriltags
+#  LIBRARIES april_tags
 #  CATKIN_DEPENDS roscpp std_msgs tf
   DEPENDS OpenCV
 )
@@ -67,24 +67,24 @@ include_directories(
 
 ## Declare a cpp library
 file(GLOB SRC_FILES "src/*.c*")
-add_library(apriltags_lib ${SRC_FILES})
+add_library(april_tags_lib ${SRC_FILES})
 
-target_link_libraries(apriltags_lib
+target_link_libraries(april_tags_lib
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
 )
 
 ## Declare a cpp executable
-add_executable(apriltags_node src/apriltags_node.cpp)
+add_executable(april_tags_node src/apriltags_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(apriltags_node apriltags_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(apriltags_node
+target_link_libraries(april_tags_node
   ${catkin_LIBRARIES}
-  apriltags_lib
+  april_tags_lib
 )
 
 #############
@@ -102,7 +102,7 @@ target_link_libraries(apriltags_node
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS apriltags apriltags_node
+# install(TARGETS april_tags apriltags_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
