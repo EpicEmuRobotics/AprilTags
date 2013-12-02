@@ -14,8 +14,6 @@ AprilTagReader::AprilTagReader() :
   m_tagCodes(AprilTags::tagCodes36h11),
 
   m_draw(true),
-  m_arduino(false),
-
   m_width(640),
   m_height(480),
   m_tagSize(0.166),
@@ -23,12 +21,6 @@ AprilTagReader::AprilTagReader() :
   m_fy(600),
   m_px(m_width/2),
   m_py(m_height/2),
-
-  m_exposure(-1),
-  m_gain(-1),
-  m_brightness(-1),
-
-  m_deviceId(0),
 
   hasNewImage(false),
   m_it(nh),

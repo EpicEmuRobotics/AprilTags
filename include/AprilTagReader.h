@@ -26,7 +26,6 @@ class AprilTagReader {
   AprilTags::TagCodes m_tagCodes;
 
   bool m_draw; // draw image and April tag detections?
-  bool m_arduino; // send tag detections to serial port?
 
   int m_width; // image size in pixels
   int m_height;
@@ -35,12 +34,6 @@ class AprilTagReader {
   double m_fy;
   double m_px; // camera principal point
   double m_py;
-
-  int m_deviceId; // camera id (in case of multiple cameras)
-
-  int m_exposure;
-  int m_gain;
-  int m_brightness;
 
   bool hasNewImage;
 
