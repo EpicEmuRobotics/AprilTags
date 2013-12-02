@@ -68,7 +68,7 @@ int main(int argc, char** argv){
       //pitch += PI;
       //pitch = -pitch;
 
-      geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(yaw, roll, pitch);
+      geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(yaw, roll, -pitch);
 
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped tag_transform;
