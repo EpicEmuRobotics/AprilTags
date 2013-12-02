@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 #include <ros/ros.h>
@@ -27,12 +27,12 @@ int main(int argc, char** argv){
     tags_broadcaster.push_back(tf::TransformBroadcaster());
   }
   */
- 
+
 
   tf::TransformBroadcaster tags_broadcaster;
 
   ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("/apriltags", 1000);
-  
+
   AprilTagReader reader;
 
   ros::Time current_time, last_time;
@@ -77,7 +77,7 @@ int main(int argc, char** argv){
 
       stringstream ss;
       ss << "/april_tag["<<id<<"]";
-      
+
       tag_transform.child_frame_id = ss.str().c_str();
 
       tag_transform.transform.translation.x = x;

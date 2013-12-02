@@ -36,6 +36,7 @@ AprilTagReader::AprilTagReader() :
   m_image_topic("/camera/rgb/image_color")
 {
   processParams(nh);
+  setup();
 
   window_name = std::string("april_tags_output");
 

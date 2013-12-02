@@ -53,7 +53,7 @@ class AprilTagReader {
 
 
   ///ROS STUFF
-  
+
   ros::NodeHandle nh;
   image_transport::ImageTransport m_it;
   image_transport::Subscriber m_image_sub;
