@@ -6,10 +6,10 @@ namespace AprilTags {
 
 FloatImage::FloatImage() : width(0), height(0), pixels() {}
 
-FloatImage::FloatImage(int widthArg, int heightArg) 
+FloatImage::FloatImage(int widthArg, int heightArg)
   : width(widthArg), height(heightArg), pixels(widthArg*heightArg) {}
 
-FloatImage::FloatImage(int widthArg, int heightArg, const std::vector<float>& pArg) 
+FloatImage::FloatImage(int widthArg, int heightArg, const std::vector<float>& pArg)
   : width(widthArg), height(heightArg), pixels(pArg) {}
 
 FloatImage& FloatImage::operator=(const FloatImage& other) {

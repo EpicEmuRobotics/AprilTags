@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-find_package( OpenCV REQUIRED)
+find_package( OpenCV REQUIRED )
 
 ## Generate messages in the 'msg' folder
 # add_message_files(
@@ -46,9 +46,9 @@ find_package( OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES april_tags
-#  CATKIN_DEPENDS roscpp std_msgs tf
+  INCLUDE_DIRS include
+  LIBRARIES april_tags_lib
+  CATKIN_DEPENDS roscpp std_msgs tf
   DEPENDS OpenCV
 )
 
@@ -60,13 +60,14 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  include
+  include/
+  include/${PROJECT_NAME}
   ${catkin_INCLUDE_DIRS}
   /usr/include/eigen3
 )
 
 ## Declare a cpp library
-file(GLOB SRC_FILES "src/*.c*")
+file(GLOB SRC_FILES "src/*.c*" "src/C++Library/*.c*")
 add_library(april_tags_lib ${SRC_FILES})
 
 target_link_libraries(april_tags_lib
@@ -101,19 +102,19 @@ target_link_libraries(april_tags_node
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-## Mark executables and/or libraries for installation
-# install(TARGETS april_tags apriltags_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+# Mark executables and/or libraries for installation
+install(TARGETS april_tags_lib april_tags_node
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
-## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+# Mark cpp header files for installation
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

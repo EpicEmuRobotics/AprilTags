@@ -221,6 +221,8 @@ void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
 {
   ROS_INFO("Got new image");
 
+  lastImageReceivedTime = ros::Time::now();
+
   // cv_bridge is a way to convert ros images to opencv format images
   cv_bridge::CvImagePtr cv_ptr;
   try

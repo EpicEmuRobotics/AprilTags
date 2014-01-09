@@ -22,6 +22,9 @@ const double TWOPI = 2.0*PI;
 
 class AprilTagReader {
 
+private:
+  void setup();
+
   AprilTags::TagDetector* m_tagDetector;
   AprilTags::TagCodes m_tagCodes;
 
@@ -46,11 +49,10 @@ class AprilTagReader {
 
 
   ///ROS STUFF
-
   ros::NodeHandle nh;
+  ros::Time lastImageReceivedTime;
   image_transport::ImageTransport m_it;
   image_transport::Subscriber m_image_sub;
-
   std::string m_image_topic;
 
 public:
@@ -58,12 +60,8 @@ public:
 
   void imageCallback(const sensor_msgs::ImageConstPtr& img);
 
-  // changing the tag family
-  void setTagCodes(string s);
-
   void processParams(ros::NodeHandle);
 
-  void setup();
 
   void print_detection(AprilTags::TagDetection& detection);
 
@@ -71,9 +69,11 @@ public:
   // and information about detections generated
   void read();
 
+  //Get the vector of tags found during the reading
   std::vector<AprilTags::TagDetection> getTags() { return m_lastReadTags; };
 
   std::vector<AprilTags::TagDetection> m_lastReadTags;
+
   /**
    * Normalize angle to be within the interval [-pi,pi].
    */

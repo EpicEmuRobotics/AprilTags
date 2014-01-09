@@ -18,21 +18,16 @@ bool hasNewSpeeds = true;
 int main(int argc, char** argv){
   ros::init(argc, argv, "AprilTagsNode");
 
+  //ROS nodehandle
   ros::NodeHandle n;
 
-  /*
-  std::vector<tf::TransformBroadcaster> tags_broadcaster;
-  for (int i = 0; i < NUM_APRIL_TAGS; ++i)
-  {
-    tags_broadcaster.push_back(tf::TransformBroadcaster());
-  }
-  */
-
-
+  //Transform broadcaster to send the newly found tags to the TF tree
   tf::TransformBroadcaster tags_broadcaster;
 
-  ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("/apriltags", 1000);
+  //The tags publisher will publish the pose of the tag (relative to the camera) on the 'apriltags' topic
+  ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("apriltags", 1000);
 
+  //AprilTagReader constantly receives messages on the specified topic, and processes the image, finding april tags
   AprilTagReader reader;
 
   ros::Time current_time, last_time;
