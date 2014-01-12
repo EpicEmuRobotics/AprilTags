@@ -69,6 +69,9 @@ public:
   // and information about detections generated
   void read();
 
+  //Return the ros::Time of the last image that was read
+  ros::Time getImageReadTime(){ return lastImageReceivedTime; };
+
   //Get the vector of tags found during the reading
   std::vector<AprilTags::TagDetection> getTags() { return m_lastReadTags; };
 

@@ -30,10 +30,6 @@ int main(int argc, char** argv){
   //AprilTagReader constantly receives messages on the specified topic, and processes the image, finding april tags
   AprilTagReader reader;
 
-  ros::Time current_time, last_time;
-  current_time = ros::Time::now();
-  last_time = ros::Time::now();
-
   ros::Rate r(1.0);
 
   tf::TransformListener listener;
@@ -67,7 +63,7 @@ int main(int argc, char** argv){
 
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped tag_transform;
-      tag_transform.header.stamp = current_time;
+      tag_transform.header.stamp = reader.get;
       tag_transform.header.frame_id = "camera_depth_frame";
 
       stringstream ss;
@@ -85,7 +81,6 @@ int main(int argc, char** argv){
     }
 
     cvWaitKey(10);
-    last_time = current_time;
     r.sleep();
   }
 }

@@ -221,19 +221,24 @@ void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
 {
   ROS_INFO("Got new image");
 
-  lastImageReceivedTime = ros::Time::now();
+  //If hasNewImage is true, then the system SHOULD be processing an image, extracting
+  // the april tags if any exist
+  if (!hasNewImage)
+  {
+    lastImageReceivedTime = ros::Time::now();
 
-  // cv_bridge is a way to convert ros images to opencv format images
-  cv_bridge::CvImagePtr cv_ptr;
-  try
-  {
-    cv_ptr = cv_bridge::toCvCopy(img, std::string());
-    m_image = cv_ptr->image;
+    // cv_bridge is a way to convert ros images to opencv format images
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(img, std::string());
+      m_image = cv_ptr->image;
+    }
+    catch (cv_bridge::Exception& e)
+    {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+    hasNewImage = true;
   }
-  catch (cv_bridge::Exception& e)
-  {
-    ROS_ERROR("cv_bridge exception: %s", e.what());
-    return;
-  }
-  hasNewImage = true;
 }
