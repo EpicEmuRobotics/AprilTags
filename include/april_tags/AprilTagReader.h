@@ -50,7 +50,7 @@ private:
 
   ///ROS STUFF
   ros::NodeHandle nh;
-  ros::Time lastImageReceivedTime;
+  ros::Time m_lastImageReceivedTime;
   image_transport::ImageTransport m_it;
   image_transport::Subscriber m_image_sub;
   std::string m_image_topic;
@@ -70,7 +70,7 @@ public:
   void read();
 
   //Return the ros::Time of the last image that was read
-  ros::Time getImageReadTime(){ return lastImageReceivedTime; };
+  ros::Time getImageReadTime(){ return m_lastImageReceivedTime; };
 
   //Get the vector of tags found during the reading
   std::vector<AprilTags::TagDetection> getTags() { return m_lastReadTags; };

@@ -225,7 +225,7 @@ void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
   // the april tags if any exist
   if (!hasNewImage)
   {
-    lastImageReceivedTime = ros::Time::now();
+    m_lastImageReceivedTime = ros::Time::now();
 
     // cv_bridge is a way to convert ros images to opencv format images
     cv_bridge::CvImagePtr cv_ptr;

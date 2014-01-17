@@ -25,7 +25,7 @@ int main(int argc, char** argv){
   tf::TransformBroadcaster tags_broadcaster;
 
   //The tags publisher will publish the pose of the tag (relative to the camera) on the 'apriltags' topic
-  ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("apriltags", 1000);
+  ros::Publisher tags_pub = n.advertise<geometry_msgs::PoseStamped>("apriltags", 100);
 
   //AprilTagReader constantly receives messages on the specified topic, and processes the image, finding april tags
   AprilTagReader reader;
@@ -40,9 +40,7 @@ int main(int argc, char** argv){
     ROS_INFO("Reading April Tags...");
     reader.read();
 
-    current_time = ros::Time::now();
-
-    ROS_INFO("Running... #tags: %ld, time: %lf",reader.getTags().size(), current_time.toSec());
+    ROS_INFO("Running... #tags: %ld",reader.getTags().size());
 
     for (int i=0; i<reader.getTags().size(); i++)
     {
@@ -63,7 +61,7 @@ int main(int argc, char** argv){
 
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped tag_transform;
-      tag_transform.header.stamp = reader.get;
+      tag_transform.header.stamp = reader.getImageReadTime();
       tag_transform.header.frame_id = "camera_depth_frame";
 
       stringstream ss;
