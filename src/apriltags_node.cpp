@@ -30,7 +30,7 @@ int main(int argc, char** argv){
   //AprilTagReader constantly receives messages on the specified topic, and processes the image, finding april tags
   AprilTagReader reader;
 
-  ros::Rate r(1.0);
+  ros::Rate r(10.0);
 
   tf::TransformListener listener;
 
@@ -57,12 +57,12 @@ int main(int argc, char** argv){
       //pitch += PI;
       //pitch = -pitch;
 
-      geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(-yaw, -roll, -pitch);
-
+      //geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(-yaw, -roll, -pitch);
+      geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, -pitch);
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped tag_transform;
       tag_transform.header.stamp = reader.getImageReadTime();
-      tag_transform.header.frame_id = "camera_depth_frame";
+      tag_transform.header.frame_id = "/camera_rgb_frame";
 
       stringstream ss;
       ss << "/april_tag["<<id<<"]";
@@ -78,7 +78,9 @@ int main(int argc, char** argv){
       tags_broadcaster.sendTransform(tag_transform);
     }
 
-    cvWaitKey(10);
+    ros::spinOnce();               // check for incoming messages
+    if (reader.getDraw())
+      cvWaitKey(10);
     r.sleep();
   }
 }

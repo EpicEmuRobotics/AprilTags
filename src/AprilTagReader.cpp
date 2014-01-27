@@ -13,7 +13,7 @@ AprilTagReader::AprilTagReader() :
   m_tagDetector(NULL),
   m_tagCodes(AprilTags::tagCodes36h11),
 
-  m_draw(true),
+  m_draw(false),
   m_width(640),
   m_height(480),
   m_tagSize(0.166),
@@ -30,7 +30,8 @@ AprilTagReader::AprilTagReader() :
   processParams(nh);
   setup();
 
-  window_name = std::string("april_tags_output");
+  if (m_draw)
+    window_name = std::string("april_tags_output");
 
   m_image_sub= m_it.subscribe(m_image_topic.c_str(), 1, &AprilTagReader::imageCallback, this);
 }

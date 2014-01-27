@@ -69,6 +69,9 @@ public:
   // and information about detections generated
   void read();
 
+  // Returns true if the algorithm is displaying results in a separate windows
+  bool getDraw(){ return m_draw; };
+
   //Return the ros::Time of the last image that was read
   ros::Time getImageReadTime(){ return m_lastImageReceivedTime; };
 
