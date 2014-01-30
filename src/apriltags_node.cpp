@@ -58,8 +58,11 @@ int main(int argc, char** argv){
       //pitch = -pitch;
 
       //geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(-yaw, -roll, -pitch);
+
+      //We only care about the pitch (z axis)
       geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, -pitch);
-      //first, we'll publish the transform over tf
+
+      //publish to the tf tree
       geometry_msgs::TransformStamped tag_transform;
       tag_transform.header.stamp = reader.getImageReadTime();
       tag_transform.header.frame_id = "/camera_rgb_frame";
@@ -78,7 +81,7 @@ int main(int argc, char** argv){
       tags_broadcaster.sendTransform(tag_transform);
     }
 
-    ros::spinOnce();               // check for incoming messages
+    ros::spinOnce();               // send output ASAP
     if (reader.getDraw())
       cvWaitKey(10);
     r.sleep();
