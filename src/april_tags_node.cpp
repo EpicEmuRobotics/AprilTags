@@ -60,7 +60,9 @@ april_tags::AprilTag getNotificationMessage(int id, geometry_msgs::TransformStam
 }
 
 int main(int argc, char** argv){
-  ros::init(argc, argv, "AprilTagsNode");
+  ros::init(argc, argv, "april_tag_node");
+
+  ROS_INFO("Starting April Tag Reader node");
 
   //ROS nodehandle
   ros::NodeHandle nh;

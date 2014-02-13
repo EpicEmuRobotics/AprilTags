@@ -76,7 +76,7 @@ target_link_libraries(april_tags_lib
 )
 
 ## Declare a cpp executable
-add_executable(april_tags_node src/apriltags_node.cpp)
+add_executable(april_tags_node src/april_tags_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
