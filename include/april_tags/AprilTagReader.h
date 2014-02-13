@@ -47,16 +47,16 @@ private:
 
   void wRo_to_euler(const Eigen::Matrix3d& wRo, double& yaw, double& pitch, double& roll);
 
-
   ///ROS STUFF
   ros::NodeHandle nh;
   ros::Time m_lastImageReceivedTime;
   image_transport::ImageTransport m_it;
   image_transport::Subscriber m_image_sub;
   std::string m_image_topic;
+  std::string m_image_frame;
 
 public:
-  AprilTagReader();
+  AprilTagReader(ros::NodeHandle nh);
 
   void imageCallback(const sensor_msgs::ImageConstPtr& img);
 
@@ -87,4 +87,6 @@ public:
 
   void getTransformInfo(AprilTags::TagDetection& detection, double& x, double& y, double& z,
                        double& roll, double& pitch, double& yaw);
+
+  std::string getImageFrame(){ return m_image_frame; };
 }; // AprilTagReader

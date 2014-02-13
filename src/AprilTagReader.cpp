@@ -8,7 +8,7 @@ const std::string intro = "\n"
 
 
 // default constructor
-AprilTagReader::AprilTagReader() :
+AprilTagReader::AprilTagReader(ros::NodeHandle nh) :
   // default settings, most can be modified through command line options (see below)
   m_tagDetector(NULL),
   m_tagCodes(AprilTags::tagCodes36h11),
@@ -25,7 +25,8 @@ AprilTagReader::AprilTagReader() :
   hasNewImage(false),
   m_it(nh),
 
-  m_image_topic("/camera/rgb/image_color")
+  m_image_topic("/camera/rgb/image_color"),
+  m_image_frame("/camera_rgb_frame")
 {
   processParams(nh);
   setup();
@@ -37,8 +38,8 @@ AprilTagReader::AprilTagReader() :
 }
 
 // parse command line options to change default behavior
-void AprilTagReader::processParams(ros::NodeHandle) {
-  ROS_INFO("Ported to ROS from:\n%s", intro.c_str());
+void AprilTagReader::processParams(ros::NodeHandle nh) {
+  ROS_INFO("Ported to ROS by Shawn Hanna, using code from:\n%s", intro.c_str());
 
   std::string tagFamily = "36h11";
   if (nh.getParam("tagFamily", tagFamily))
@@ -65,12 +66,15 @@ void AprilTagReader::processParams(ros::NodeHandle) {
     ROS_INFO("Listening to color images coming on the topic: %s", m_image_topic.c_str());
   }
 
+  if (nh.getParam("imageFrame", m_image_frame))
+  {
+    ROS_INFO("Frame that the image is a child of: %s", m_image_frame.c_str());
+  }
+
   if (nh.getParam("draw", m_draw))
   {
     if (m_draw)
       ROS_INFO("Drawing has been enabled. Detected tags will be shown in a separate window");
-    else
-      ROS_INFO("Not showing the april detections tag onscreen");
   }
   else
   {
@@ -160,7 +164,7 @@ void AprilTagReader::read() {
     hasNewImage = false;
 
     // print out each detection
-    cout << m_lastReadTags.size() << " tags detected:" << endl;
+    //cout << m_lastReadTags.size() << " tags detected:" << endl;
     for (int i=0; i<m_lastReadTags.size(); i++) {
       print_detection(m_lastReadTags[i]);
     }
@@ -220,7 +224,7 @@ void AprilTagReader::getTransformInfo(AprilTags::TagDetection& detection,
 
 void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
 {
-  ROS_INFO("Got new image");
+  //ROS_INFO("Got new image");
 
   //If hasNewImage is true, then the system SHOULD be processing an image, extracting
   // the april tags if any exist
