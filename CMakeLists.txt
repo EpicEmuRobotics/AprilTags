@@ -19,7 +19,7 @@ find_package( OpenCV REQUIRED )
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  AprilTag.msg
+    AprilTag.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -32,8 +32,8 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  std_msgs
-  geometry_msgs
+    std_msgs
+    geometry_msgs
 )
 
 ###################################
@@ -48,7 +48,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES april_tags_lib
-  CATKIN_DEPENDS roscpp std_msgs tf
+  CATKIN_DEPENDS roscpp std_msgs tf global_planner
   DEPENDS OpenCV
 )
 
@@ -75,12 +75,15 @@ target_link_libraries(april_tags_lib
   ${OpenCV_LIBS}
 )
 
+add_dependencies(april_tags_lib ${PROJECT_NAME}_generate_messages_cpp)
+
 ## Declare a cpp executable
 add_executable(april_tags_node src/april_tags_node.cpp)
+add_dependencies(april_tags_node april_tags_lib)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(apriltags_node apriltags_generate_messages_cpp)
+# add_dependencies(april_tags_node april_tags_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(april_tags_node
