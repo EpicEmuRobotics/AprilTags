@@ -34,6 +34,7 @@ generate_messages(
   DEPENDENCIES
     std_msgs
     geometry_msgs
+    global_planner
 )
 
 ###################################
@@ -48,7 +49,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES april_tags_lib
-  CATKIN_DEPENDS roscpp std_msgs tf global_planner
+  CATKIN_DEPENDS roscpp std_msgs tf
   DEPENDS OpenCV
 )
 
