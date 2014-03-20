@@ -27,10 +27,10 @@ geometry_msgs::TransformStamped getTransformStamped(int id, ros::Time imageReadT
 
   geometry_msgs::TransformStamped tag_transform;
   tag_transform.header.stamp = imageReadTime;
-  tag_transform.header.frame_id = "/camera_rgb_frame";
+  tag_transform.header.frame_id = "camera_rgb_frame";
 
   stringstream ss;
-  ss << "/april_tag["<<id<<"]";
+  ss << "april_tag["<<id<<"]";
 
   tag_transform.child_frame_id = ss.str().c_str();
 

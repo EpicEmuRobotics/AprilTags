@@ -25,8 +25,9 @@ AprilTagReader::AprilTagReader(ros::NodeHandle nh) :
   hasNewImage(false),
   m_it(nh),
 
-  m_image_topic("/camera/rgb/image_color"),
-  m_image_frame("/camera_rgb_frame")
+  // m_image_topic("camera/rgb/image_color"),
+  m_image_topic("camera/image_raw"),
+  m_image_frame("camera_rgb_frame")
 {
   processParams(nh);
   setup();
