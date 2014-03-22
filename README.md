@@ -13,7 +13,7 @@ For the kinect, we know the focal length in pixels to be: 525
 http://wiki.ros.org/kinect_calibration/technical
 
 
-For the Logitech C270 webcam, the focal length is 4mm and the image sensor size is ~4.6188mm?.  This gives a focal length in pixels of 480*4E-3/4.6188E-3 which is: 415.692388
+For the Logitech C270 webcam, the focal length is 4mm.  However, we don't know the image size, so we have to estimate the focal length in pixels.  To do this, I tested the output from the tag at a constant distance, varying the focal length, and found that the focal length in pixels is around 790 pixels.
 
 http://logitech-en-amr.custhelp.com/app/answers/detail/a_id/17556
 http://www.dpreview.com/glossary/camera-system/sensor-sizes
