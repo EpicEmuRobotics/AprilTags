@@ -18,3 +18,8 @@ For the Logitech C270 webcam, the focal length is 4mm.  However, we don't know t
 http://logitech-en-amr.custhelp.com/app/answers/detail/a_id/17556
 http://www.dpreview.com/glossary/camera-system/sensor-sizes
 http://www.siliconimaging.com/Lens%20Image%20formats.htm
+
+
+For the camera in Gazebo, we can calculate the focal length via the formula: focal_lengtth = image_width / (2*tan(hfov_radian / 2).  In our case, we have a width of 640, and fov is 60 degrees (1.04719755 radians). Doing the calculation, we see the focal length in px is: 554.256
+
+http://answers.ros.org/question/9761/incorrect-camera-extrinsics-for-simulated-gazebo-cameras/
