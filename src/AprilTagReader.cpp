@@ -16,9 +16,9 @@ AprilTagReader::AprilTagReader(ros::NodeHandle nh) :
   m_draw(false),
   m_width(640),
   m_height(480),
-  m_tagSize(0.166),
-  m_fx(600),
-  m_fy(600),
+  m_tagSize(0.16992),
+  m_fx(554.256),
+  m_fy(m_fx),
   m_px(m_width/2),
   m_py(m_height/2),
 
@@ -27,7 +27,7 @@ AprilTagReader::AprilTagReader(ros::NodeHandle nh) :
 
   // m_image_topic("camera/rgb/image_color"),
   m_image_topic("camera/image_raw"),
-  m_image_frame("camera_rgb_frame")
+  m_image_frame("camera_link")
 {
   processParams(nh);
   setup();
