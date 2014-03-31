@@ -8,6 +8,7 @@
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Float32.h>
 #include <april_tags/AprilTag.h>
+#include <april_tags/AprilTagList.h>
 #include "AprilTagReader.h"
 
 
@@ -70,20 +71,28 @@ int main(int argc, char** argv){
   //AprilTagReader constantly receives messages on the specified topic, and processes the image, finding april tags
   AprilTagReader reader(nh);
 
+  // Publisher to send out the tag message
+  ros::Publisher single_tag_pub;
   // Publisher to send out the update message
   ros::Publisher tags_pub;
+
   //Transform broadcaster to send the newly found tags to the TF tree
   tf::TransformBroadcaster tags_broadcaster;
 
   ros::Rate r(10.0);
 
-  tags_pub = nh.advertise<april_tags::AprilTag>("april_tags", 100);
+  single_tag_pub = nh.advertise<april_tags::AprilTag>("april_tag", 100);
+  tags_pub = nh.advertise<april_tags::AprilTagList>("april_tags", 100);
 
   while(nh.ok()){
+    ros::spinOnce();
     //ROS_INFO("Reading April Tags...");
     reader.read();
 
     //ROS_INFO("Running... #tags: %ld",reader.getTags().size());
+
+    //List of all april tags seen in the image
+    april_tags::AprilTagList tags_list;
 
     for (int i=0; i<reader.getTags().size(); i++)
     {
@@ -98,7 +107,22 @@ int main(int argc, char** argv){
       tags_broadcaster.sendTransform(transformStamped);
 
       april_tags::AprilTag at = getNotificationMessage(i, transformStamped);
-      tags_pub.publish(at);
+      single_tag_pub.publish(at);
+
+      //add to all tag broadcast
+      tags_list.poses.push_back(at.pose);
+      tags_list.tag_ids.push_back(at.tag_id);
+    }
+
+    tags_pub.publish(tags_list);
+
+
+    //Publish a single tag with
+    if (reader.getTags().size() == 0)
+    {
+      april_tags::AprilTag at;
+      at.tag_id = -1;
+      single_tag_pub.publish(at);
     }
 
     ros::spinOnce();               // send output ASAP
