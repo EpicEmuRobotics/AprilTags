@@ -57,6 +57,7 @@ private:
 
 public:
   AprilTagReader(ros::NodeHandle nh);
+  ~AprilTagReader();
 
   void imageCallback(const sensor_msgs::ImageConstPtr& img);
 

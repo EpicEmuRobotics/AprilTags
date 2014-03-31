@@ -38,6 +38,11 @@ AprilTagReader::AprilTagReader(ros::NodeHandle nh) :
   m_image_sub= m_it.subscribe(m_image_topic.c_str(), 1, &AprilTagReader::imageCallback, this);
 }
 
+AprilTagReader::~AprilTagReader()
+{
+  delete m_tagDetector;
+}
+
 // parse command line options to change default behavior
 void AprilTagReader::processParams(ros::NodeHandle nh) {
   ROS_INFO("Ported to ROS by Shawn Hanna, using code from:\n%s", intro.c_str());
