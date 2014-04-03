@@ -48,7 +48,7 @@ void AprilTagReader::processParams(ros::NodeHandle nh) {
   ROS_INFO("Ported to ROS by Shawn Hanna, using code from:\n%s", intro.c_str());
 
   std::string tagFamily = "36h11";
-  if (nh.getParam("tagFamily", tagFamily))
+  if (nh.getParam("april_tags/tagFamily", tagFamily))
   {
     if (tagFamily=="16h5") {
       m_tagCodes = AprilTags::tagCodes16h5;
@@ -67,17 +67,17 @@ void AprilTagReader::processParams(ros::NodeHandle nh) {
     ROS_INFO("Set tag family to: %s", tagFamily.c_str());
   }
 
-  if (nh.getParam("imageTopic", m_image_topic))
+  if (nh.getParam("april_tags/imageTopic", m_image_topic))
   {
     ROS_INFO("Listening to color images coming on the topic: %s", m_image_topic.c_str());
   }
 
-  if (nh.getParam("imageFrame", m_image_frame))
+  if (nh.getParam("april_tags/imageFrame", m_image_frame))
   {
     ROS_INFO("Frame that the image is a child of: %s", m_image_frame.c_str());
   }
 
-  if (nh.getParam("draw", m_draw))
+  if (nh.getParam("april_tags/draw", m_draw))
   {
     if (m_draw)
       ROS_INFO("Drawing has been enabled. Detected tags will be shown in a separate window");
@@ -87,24 +87,24 @@ void AprilTagReader::processParams(ros::NodeHandle nh) {
       ROS_INFO("Not showing the april detections tags onscreen");
   }
 
-  if (nh.getParam("height", m_height))
+  if (nh.getParam("april_tags/height", m_height))
   {
     ROS_INFO("Height of image set to: %d", m_height);
   }
 
-  if (nh.getParam("width", m_width))
+  if (nh.getParam("april_tags/width", m_width))
   {
     m_px = m_width/2;
     ROS_INFO("Width of image set to: %d", m_width);
   }
 
-  if (nh.getParam("focalLength", m_fx))
+  if (nh.getParam("april_tags/focalLength", m_fx))
   {
     m_fy = m_fx;
     ROS_INFO("Focal length set to: %lf", m_fx);
   }
 
-  if (nh.getParam("tagSize", m_tagSize))
+  if (nh.getParam("april_tags/tagSize", m_tagSize))
   {
     ROS_INFO("Tag size (square black frame) in meters, set to: %lf", m_tagSize);
   }

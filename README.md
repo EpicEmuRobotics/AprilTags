@@ -20,6 +20,6 @@ http://www.dpreview.com/glossary/camera-system/sensor-sizes
 http://www.siliconimaging.com/Lens%20Image%20formats.htm
 
 
-For the camera in Gazebo, we can calculate the focal length via the formula: focal_lengtth = image_width / (2*tan(hfov_radian / 2).  In our case, we have a width of 640, and fov is 60 degrees (1.04719755 radians). Doing the calculation, we see the focal length in px is: 554.256
+For the camera in Gazebo, we can calculate the focal length via the formula: focal_length = image_width / (2*tan(hfov_radian / 2).  In our case, we have a width of 640, and fov is 60 degrees (1.04719755 radians). Doing the calculation, we see the focal length in px is: 554.256
 
 http://answers.ros.org/question/9761/incorrect-camera-extrinsics-for-simulated-gazebo-cameras/
