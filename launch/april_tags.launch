@@ -1,0 +1,21 @@
+<launch>
+  <!-- local machine already has a definition by default.
+       This tag overrides the default definition with
+       specific ROS_ROOT and ROS_PACKAGE_PATH values -->
+  <machine name="local_alt" address="localhost" default="true"/>
+
+  <!-- odometry broadcast node debug mode 	-->
+  <node name="april_tags" pkg="april_tags" type="april_tags_node" output="screen">
+        <!-- Image topic to listen to -->
+        <param name="imageTopic" value="camera/image_raw" />
+        <!-- tf frame of the camera's optical frame -->
+        <param name="imageFrame" value="camera_link" />
+        <!-- Focal lengths: kinect = 525, gazebo = 554, logitech = 790 -->
+        <param name="focalLength" value="554" />
+        <param name="tagFamily" value="36h11" />
+        <param name="width" value="640" />
+        <param name="height" value="480" />
+        <param name="tagSize" value="0.16992" />
+        <param name="draw" value="false" />
+  </node>
+</launch>

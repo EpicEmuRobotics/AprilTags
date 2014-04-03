@@ -81,6 +81,8 @@ void AprilTagReader::processParams(ros::NodeHandle nh) {
   {
     if (m_draw)
       ROS_INFO("Drawing has been enabled. Detected tags will be shown in a separate window");
+    else
+      ROS_INFO("Separate April Tag detection window will not be shown. Results are viewable in rviz");
   }
   else
   {
