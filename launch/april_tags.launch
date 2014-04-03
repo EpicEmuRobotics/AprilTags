@@ -4,7 +4,7 @@
        specific ROS_ROOT and ROS_PACKAGE_PATH values -->
   <machine name="local_alt" address="localhost" default="true"/>
 
-  <!-- odometry broadcast node debug mode 	-->
+  <!-- odometry broadcast node debug mode -->
   <node name="april_tags" pkg="april_tags" type="april_tags_node" output="screen">
         <!-- Image topic to listen to -->
         <param name="imageTopic" value="camera/image_raw" />

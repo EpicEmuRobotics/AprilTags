@@ -122,8 +122,8 @@ void AprilTagReader::setup() {
 }
 
 void AprilTagReader::print_detection(AprilTags::TagDetection& detection) {
-  cout << "  Id: " << detection.id
-       << " (Hamming: " << detection.hammingDistance << ")";
+  stringstream ss;
+  ss << "  Id: " << detection.id << " (Hamming: " << detection.hammingDistance << ")";
 
   // recovering the relative pose of a tag:
 
@@ -145,7 +145,7 @@ void AprilTagReader::print_detection(AprilTags::TagDetection& detection) {
   double yaw, pitch, roll;
   wRo_to_euler(fixed_rot, yaw, pitch, roll);
 
-  cout << "  distance=" << translation.norm()
+  ss << "  distance=" << translation.norm()
        << "m, x=" << translation(0)
        << ", y=" << translation(1)
        << ", z=" << translation(2)
@@ -154,6 +154,7 @@ void AprilTagReader::print_detection(AprilTags::TagDetection& detection) {
        << ", roll=" << roll
        << endl;
 
+  ROS_DEBUG_STREAM(ss.str());
   // Also note that for SLAM/multi-view application it is better to
   // use reprojection error of corner points, because the noise in
   // this relative pose is very non-Gaussian; see iSAM source code

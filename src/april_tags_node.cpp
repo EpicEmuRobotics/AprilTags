@@ -96,8 +96,8 @@ int main(int argc, char** argv){
 
     for (int i=0; i<reader.getTags().size(); i++)
     {
-      int id = reader.getTags()[i].id;
       AprilTags::TagDetection td = reader.getTags()[i];
+      int id = td.id;
 
       double x,y,z,roll,pitch,yaw;
       reader.getTransformInfo(td, x,y,z,roll,pitch,yaw);
@@ -106,7 +106,7 @@ int main(int argc, char** argv){
       //publish to the tf tree
       tags_broadcaster.sendTransform(transformStamped);
 
-      april_tags::AprilTag at = getNotificationMessage(i, transformStamped);
+      april_tags::AprilTag at = getNotificationMessage(id, transformStamped);
       single_tag_pub.publish(at);
 
       //add to all tag broadcast

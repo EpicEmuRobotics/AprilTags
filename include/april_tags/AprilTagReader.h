@@ -13,6 +13,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
+#include <sstream>
 
 #ifndef PI
 const double PI = 3.14159265358979323846;
