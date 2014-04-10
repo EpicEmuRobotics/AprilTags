@@ -26,8 +26,8 @@ AprilTagReader::AprilTagReader(ros::NodeHandle nh) :
   m_it(nh),
 
   // m_image_topic("camera/rgb/image_color"),
-  m_image_topic("camera/image_raw"),
-  m_image_frame("camera_link")
+  m_image_topic("camera/rgb/image_color"),
+  m_image_frame("camera_rgb_frame")
 {
   processParams(nh);
   setup();
@@ -184,7 +184,7 @@ void AprilTagReader::read() {
         // also highlight in the m_image
         m_lastReadTags[i].draw(m_image);
       }
-      ROS_INFO("Displaying image");
+      // ROS_INFO("Displaying image");
       imshow(window_name, m_image); // OpenCV call
     }
   }
@@ -237,6 +237,8 @@ void AprilTagReader::imageCallback(const sensor_msgs::ImageConstPtr& img)
 
   //If hasNewImage is true, then the system SHOULD be processing an image, extracting
   // the april tags if any exist
+
+  // ROS_ERROR_STREAM("Received new image");
   if (!hasNewImage)
   {
     m_lastImageReceivedTime = ros::Time::now();
