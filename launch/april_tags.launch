@@ -1,14 +1,14 @@
 <launch>
   <include file="$(find global_planner)/launch/computers.machine" />
 
-  <arg name="imageTopic" default="camera/rgb/image_color"/>
-  <arg name="imageFrame" default="camera_rgb_frame"/>
-  <arg name="focalLength" default="525"/>
+  <arg name="imageTopic" default="camera/image_raw"/>
+  <arg name="imageFrame" default="camera_link"/>
+  <arg name="focalLength" default="554"/>
   <arg name="tagFamily" default="36h11"/>
   <arg name="width" default="640"/>
   <arg name="height" default="480"/>
   <arg name="tagSize" default="0.16992"/>
-  <arg name="draw" default="true"/>
+  <arg name="draw" default="false"/>
 
   <arg name="machineName" default="localhost"/>
 
