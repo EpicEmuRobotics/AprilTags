@@ -116,7 +116,6 @@ int main(int argc, char** argv){
 
     tags_pub.publish(tags_list);
 
-
     //Publish a single tag with
     if (reader.getTags().size() == 0)
     {
@@ -125,7 +124,6 @@ int main(int argc, char** argv){
       single_tag_pub.publish(at);
     }
 
-    ros::spinOnce();               // send output ASAP
     if (reader.getDraw())
       cvWaitKey(10);
     r.sleep();
