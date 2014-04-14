@@ -45,7 +45,7 @@ AprilTagReader::~AprilTagReader()
 
 // parse command line options to change default behavior
 void AprilTagReader::processParams(ros::NodeHandle nh) {
-  ROS_INFO("Ported to ROS by Shawn Hanna, using code from:\n%s", intro.c_str());
+  // ROS_INFO("Ported to ROS by Shawn Hanna, using code from:\n%s", intro.c_str());
 
   std::string tagFamily = "36h11";
   if (nh.getParam("april_tags/tagFamily", tagFamily))
