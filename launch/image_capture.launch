@@ -3,5 +3,7 @@
         <param name="video_device" value="/dev/video1" />
         <param name="pixel_format" value="yuyv" />
         <param name="camera_frame_id" value="camera_link" />
+        <!-- Remap from usb_cam topics to camera topics -->
+        <remap from="usb_cam/image_raw" to="camera/image_raw" />
     </node>
 </launch>
