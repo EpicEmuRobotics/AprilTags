@@ -28,7 +28,12 @@ geometry_msgs::TransformStamped getTransformStamped(int id, ros::Time imageReadT
 
   geometry_msgs::TransformStamped tag_transform;
   tag_transform.header.stamp = imageReadTime;
-  tag_transform.header.frame_id = "camera_link";
+
+  std::string tf_prefix = std::string("robot1_tf");
+  ros::NodeHandle nh;
+  nh.getParam("april_tags/tf_prefix", tf_prefix);
+
+  tag_transform.header.frame_id = tf_prefix + std::string("/camera_link");
 
   stringstream ss;
   ss << "april_tag["<<id<<"]";

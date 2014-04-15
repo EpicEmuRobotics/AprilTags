@@ -11,6 +11,7 @@
   <arg name="height" default="480"/>
   <arg name="tagSize" default="0.16992"/>
   <arg name="draw" default="false"/>
+  <arg name="tf_prefix" default=""/>
 
   <arg name="machineName" default="localhost"/>
 
@@ -27,5 +28,6 @@
         <param name="height" value="$(arg height)" />
         <param name="tagSize" value="$(arg tagSize)" />
         <param name="draw" value="$(arg draw)" />
+        <param name="tf_prefix" value="$(arg tf_prefix)" />
   </node>
 </launch>
