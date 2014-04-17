@@ -71,10 +71,18 @@ void AprilTagReader::processParams(ros::NodeHandle nh) {
   {
     ROS_INFO("Listening to color images coming on the topic: %s", m_image_topic.c_str());
   }
+  else
+  {
+    ROS_INFO_STREAM("Image topic not set, default = "<<m_image_topic);
+  }
 
   if (nh.getParam("april_tags/imageFrame", m_image_frame))
   {
     ROS_INFO("Frame that the image is a child of: %s", m_image_frame.c_str());
+  }
+  else
+  {
+    ROS_INFO_STREAM("Image frame not set, default = "<<m_image_frame);
   }
 
   if (nh.getParam("april_tags/draw", m_draw))
@@ -104,6 +112,10 @@ void AprilTagReader::processParams(ros::NodeHandle nh) {
   {
     m_fy = m_fx;
     ROS_INFO("Focal length set to: %lf", m_fx);
+  }
+  else
+  {
+    ROS_INFO_STREAM("Focal length not specified, defalut = "<<m_fx);
   }
 
   if (nh.getParam("april_tags/tagSize", m_tagSize))

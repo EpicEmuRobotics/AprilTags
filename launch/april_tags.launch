@@ -5,7 +5,8 @@
   <!-- <arg name="imageFrame" default="camera_rgb_frame"/> -->
   <arg name="imageTopic" default="camera/image_raw"/>
   <arg name="imageFrame" default="camera_link"/>
-  <arg name="focalLength" default="554"/>
+  <!-- Focal lengths: kinect = 525, gazebo = 554, logitech = 790 -->
+  <arg name="focalLength" default="790"/>
   <arg name="tagFamily" default="36h11"/>
   <arg name="width" default="640"/>
   <arg name="height" default="480"/>
@@ -21,7 +22,6 @@
         <param name="imageTopic" value="$(arg imageTopic)" />
         <!-- tf frame of the camera's optical frame -->
         <param name="imageFrame" value="$(arg imageFrame)" />
-        <!-- Focal lengths: kinect = 525, gazebo = 554, logitech = 790 -->
         <param name="focalLength" value="$(arg focalLength)" />
         <param name="tagFamily" value="$(arg tagFamily)" />
         <param name="width" value="$(arg width)" />

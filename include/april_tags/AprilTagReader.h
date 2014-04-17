@@ -91,4 +91,5 @@ public:
                        double& roll, double& pitch, double& yaw);
 
   std::string getImageFrame(){ return m_image_frame; };
+  std::string getImageTopic(){ return m_image_topic; };
 }; // AprilTagReader

@@ -11,6 +11,7 @@
 #include <april_tags/AprilTagList.h>
 #include "AprilTagReader.h"
 
+std::string tf_prefix;
 
 geometry_msgs::TransformStamped getTransformStamped(int id, ros::Time imageReadTime, double x, double y, double z, double roll, double pitch, double yaw)
 {
@@ -21,17 +22,13 @@ geometry_msgs::TransformStamped getTransformStamped(int id, ros::Time imageReadT
   //pitch += PI;
   //pitch = -pitch;
 
-  //geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(-yaw, -roll, -pitch);
+  // geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(-yaw, -roll, -pitch);
 
   //We only care about the pitch (z axis)
   geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, -pitch);
 
   geometry_msgs::TransformStamped tag_transform;
   tag_transform.header.stamp = imageReadTime;
-
-  std::string tf_prefix = std::string("robot1_tf");
-  ros::NodeHandle nh;
-  nh.getParam("april_tags/tf_prefix", tf_prefix);
 
   tag_transform.header.frame_id = tf_prefix + std::string("/camera_link");
 
@@ -75,6 +72,16 @@ int main(int argc, char** argv){
 
   //AprilTagReader constantly receives messages on the specified topic, and processes the image, finding april tags
   AprilTagReader reader(nh);
+
+  //Get the tf prefix
+  if (nh.getParam("april_tags/tf_prefix", tf_prefix))
+  {
+    ROS_INFO_STREAM("Set tf_prefix to: "<<tf_prefix);
+  }
+  else
+  {
+    tf_prefix = std::string("");
+  }
 
   // Publisher to send out the tag message
   ros::Publisher single_tag_pub;

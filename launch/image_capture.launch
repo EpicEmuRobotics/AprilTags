@@ -3,6 +3,9 @@
         <param name="video_device" value="/dev/video1" />
         <param name="pixel_format" value="yuyv" />
         <param name="camera_frame_id" value="camera_link" />
+        <param name="image_width" value="640" />
+        <param name="image_height" value="480" />
+
         <!-- Remap from usb_cam topics to camera topics -->
         <remap from="usb_cam/image_raw" to="camera/image_raw" />
     </node>
