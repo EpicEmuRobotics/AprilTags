@@ -1,5 +1,6 @@
 <launch>
   <include file="$(find global_planner)/launch/computers.machine" />
+  <arg name="machineName" default="localhost"/>
 
   <!-- <arg name="imageTopic" default="camera/rgb/image_color"/> -->
   <!-- <arg name="imageFrame" default="camera_rgb_frame"/> -->
@@ -7,14 +8,12 @@
   <arg name="imageFrame" default="camera_link"/>
   <!-- Focal lengths: kinect = 525, gazebo = 554, logitech = 790 -->
   <arg name="focalLength" default="790"/>
+  <arg name="tf_prefix" default=""/>
   <arg name="tagFamily" default="36h11"/>
   <arg name="width" default="640"/>
   <arg name="height" default="480"/>
   <arg name="tagSize" default="0.16992"/>
   <arg name="draw" default="false"/>
-  <arg name="tf_prefix" default=""/>
-
-  <arg name="machineName" default="localhost"/>
 
   <!-- odometry broadcast node debug mode -->
   <node name="april_tags" pkg="april_tags" type="april_tags_node" output="screen" machine="$(arg machineName)">
