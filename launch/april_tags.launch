@@ -12,7 +12,7 @@
   <arg name="tagFamily" default="36h11"/>
   <arg name="width" default="640"/>
   <arg name="height" default="480"/>
-  <arg name="tagSize" default="0.16992"/>
+  <arg name="tagSize" default="0.10"/>
   <arg name="draw" default="false"/>
 
   <!-- odometry broadcast node debug mode -->

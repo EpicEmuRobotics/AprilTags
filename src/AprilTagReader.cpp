@@ -191,7 +191,7 @@ void AprilTagReader::read() {
     }
 
     // show the current m_image including any m_lastReadTags
-    if (m_draw) {
+    if (m_draw && window_name != std::string()) {
       for (int i=0; i<m_lastReadTags.size(); i++) {
         // also highlight in the m_image
         m_lastReadTags[i].draw(m_image);

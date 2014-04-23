@@ -91,7 +91,7 @@ int main(int argc, char** argv){
   //Transform broadcaster to send the newly found tags to the TF tree
   tf::TransformBroadcaster tags_broadcaster;
 
-  ros::Rate r(2.0);
+  ros::Rate r(3.0);
 
   single_tag_pub = nh.advertise<april_tags::AprilTag>("april_tag", 100);
   tags_pub = nh.advertise<april_tags::AprilTagList>("april_tags", 100);
@@ -133,7 +133,7 @@ int main(int argc, char** argv){
     {
       april_tags::AprilTag at;
       at.tag_id = -1;
-      single_tag_pub.publish(at);
+      // single_tag_pub.publish(at);
     }
 
     if (reader.getDraw())
