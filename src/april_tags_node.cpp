@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 
   while(nh.ok()){
     ros::spinOnce();
-    //ROS_INFO("Reading April Tags...");
+    //ROS_DEBUG("Reading April Tags...");
     reader.read();
 
     //ROS_INFO("Running... #tags: %ld",reader.getTags().size());
