@@ -30,7 +30,7 @@ geometry_msgs::TransformStamped getTransformStamped(int id, ros::Time imageReadT
   geometry_msgs::TransformStamped tag_transform;
   tag_transform.header.stamp = imageReadTime;
 
-  tag_transform.header.frame_id = tf_prefix + std::string("/camera_link");
+  tag_transform.header.frame_id = tf_prefix + std::string("/usb_camera_link");
 
   stringstream ss;
   ss << "april_tag["<<id<<"]";
