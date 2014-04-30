@@ -4,8 +4,8 @@
 
   <!-- <arg name="imageTopic" default="camera/rgb/image_color"/> -->
   <!-- <arg name="imageFrame" default="camera_rgb_frame"/> -->
-  <arg name="imageTopic" default="camera/image_raw"/>
-  <arg name="imageFrame" default="camera_link"/>
+  <arg name="imageTopic" default="usb_camera/image_raw"/>
+  <arg name="imageFrame" default="usb_camera_link"/>
   <!-- Focal lengths: kinect = 525, gazebo = 554, logitech = 790 -->
   <arg name="focalLength" default="790"/>
   <arg name="tf_prefix" default=""/>

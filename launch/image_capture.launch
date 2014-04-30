@@ -6,7 +6,7 @@
     <arg name="video_device" default="/dev/video1" />
 
     <node pkg="usb_cam" type="usb_cam_node" name="usb_cam" >
-        <param name="video_device" value="/dev/video0" />
+        <param name="video_device" value="/dev/video1" />
         <param name="pixel_format" value="yuyv" />
         <param name="camera_frame_id" value="$(arg tf_prefix)/usb_camera_link" />
         <param name="image_width" value="640" />
